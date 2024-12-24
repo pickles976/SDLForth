@@ -1,34 +1,39 @@
 #include "string_array.h"
 
-void initStringArray(StringArray* string_array) {
-    string_array->count = 0;
-    string_array->capacity = 1024;
-    string_array->tokens = malloc(sizeof(char*) * 1024);
+StringArray *new_string_array(size_t capacity) {
+    StringArray *array = malloc(sizeof(StringArray));
+    array->count = 0;
+    array->capacity = capacity;
+    array->tokens = malloc(sizeof(char*) * capacity);
 }
 
-bool addWord(StringArray* string_array, char* word) {
+void clear_string_array(StringArray* array) {
+    array->count = 0;
+}
 
-    if (string_array->count == string_array->capacity) {
+bool add_string_array(StringArray* array, char* word) {
+
+    if (array->count == array->capacity) {
         return false;
     }
 
-    string_array->tokens[string_array->count] = word;
-    string_array->count++;
+    array->tokens[array->count] = word;
+    array->count++;
     return true;
 }
 
-void freeStringArray(StringArray* string_array) {
-    for (int i = 0; i < string_array->count; i++) {
-        free(string_array->tokens[i]);
+void free_string_array(StringArray* array) {
+    for (int i = 0; i < array->count; i++) {
+        free(array->tokens[i]);
     }
-    free(string_array->tokens);
+    free(array->tokens);
 }
 
-void printStringArray(StringArray* string_array) {
+void print_string_array(StringArray* array) {
     printf("[");
-    for (int i = 0; i < string_array->count; i++) {
-        printf("%s", string_array->tokens[i]);
-        if (i < string_array->count - 1) {
+    for (int i = 0; i < array->count; i++) {
+        printf("%s", array->tokens[i]);
+        if (i < array->count - 1) {
             printf(", ");
         }
     }

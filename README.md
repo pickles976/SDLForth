@@ -1,11 +1,13 @@
 # README
 
+https://skilldrick.github.io/easyforth/
 
 
 ### TODO:
 - [x] write scanner for REPL
 - [x] break into tokens?
 - [x] show tokens
+- [x] refactor data structures
 - [ ] iterate over tokens
 - [ ] push numeric tokens onto stack
 - [ ] create a hashmap { string: list[Token] }

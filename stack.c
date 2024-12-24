@@ -3,8 +3,8 @@
 
 #define STACK_MAX 1024
 
-Stack *new_stack(size_t capacity) {
-  Stack *stack = malloc(sizeof(Stack));
+IntStack *new_int_stack(size_t capacity) {
+  IntStack *stack = malloc(sizeof(IntStack));
   if (!stack) {
     return NULL;
   }
@@ -20,7 +20,7 @@ Stack *new_stack(size_t capacity) {
   return stack;
 }
 
-bool push_stack(Stack *stack, int item) {
+bool push_int_stack(IntStack *stack, int item) {
   if (stack->top == stack->capacity) {
     return false;
   }
@@ -30,7 +30,7 @@ bool push_stack(Stack *stack, int item) {
   return true;
 }
 
-bool pop_stack(Stack *stack, int *return_item) {
+bool pop_int_stack(IntStack *stack, int *return_item) {
   if (stack->top == 0) {
     return false;
   }

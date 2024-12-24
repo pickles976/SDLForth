@@ -11,9 +11,10 @@ typedef struct {
     char** tokens;
 } StringArray;
 
-void initStringArray(StringArray* string_array);
-bool addWord(StringArray* string_array, char* word);
-void freeStringArray(StringArray* string_array);
-void printStringArray(StringArray* string_array);
+StringArray *new_string_array(size_t capacity);
+void clear_string_array(StringArray* array);
+bool add_string_array(StringArray* array, char* word);
+void free_string_array(StringArray* array);
+void print_string_array(StringArray* array);
 
 #endif

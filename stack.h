@@ -9,12 +9,12 @@ typedef struct
     size_t top;
     size_t capacity;
     int *items;
-} Stack;
+} IntStack;
 
-Stack *new_stack(size_t capacity);
-bool push_stack(Stack *stack, int item);
-bool pop_stack(Stack *stack, int *return_item);
-void free_stack(Stack *stack);
+IntStack *new_int_stack(size_t capacity);
+bool push_int_stack(IntStack *stack, int item);
+bool pop_int_stack(IntStack *stack, int *return_item);
+void free_stack(IntStack *stack);
 
 #endif
 

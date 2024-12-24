@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "format": "c",
+        "array": "c",
+        "vector": "c"
+    }
+}
