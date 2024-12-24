@@ -11,7 +11,7 @@ void clear_string_array(StringArray* array) {
     array->count = 0;
 }
 
-bool add_string_array(StringArray* array, char* word) {
+bool add_string_to_array(StringArray* array, char* word) {
 
     if (array->count == array->capacity) {
         return false;

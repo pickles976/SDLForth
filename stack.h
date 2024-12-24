@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 typedef struct
 {
@@ -12,8 +13,9 @@ typedef struct
 } IntStack;
 
 IntStack *new_int_stack(size_t capacity);
-bool push_int_stack(IntStack *stack, int item);
-bool pop_int_stack(IntStack *stack, int *return_item);
+bool push_int_to_stack(IntStack *stack, int item);
+bool push_int_from_stack(IntStack *stack, int *return_item);
+void print_stack(IntStack *stack);
 void free_stack(IntStack *stack);
 
 #endif

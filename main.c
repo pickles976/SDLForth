@@ -17,14 +17,12 @@ static void repl() {
       break;
     }
 
-    // TODO: split line here
-    // split(line, token_list);
-
     split(line, array);
     // print_string_array(array);
 
     // TODO: interpret on split tokens
     interpret(stack, array);
+    print_stack(stack);
 
     clear_string_array(array);
     

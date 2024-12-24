@@ -13,7 +13,7 @@ typedef struct {
 
 StringArray *new_string_array(size_t capacity);
 void clear_string_array(StringArray* array);
-bool add_string_array(StringArray* array, char* word);
+bool add_string_to_array(StringArray* array, char* word);
 void free_string_array(StringArray* array);
 void print_string_array(StringArray* array);
 

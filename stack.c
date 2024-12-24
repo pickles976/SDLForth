@@ -20,7 +20,7 @@ IntStack *new_int_stack(size_t capacity) {
   return stack;
 }
 
-bool push_int_stack(IntStack *stack, int item) {
+bool push_int_to_stack(IntStack *stack, int item) {
   if (stack->top == stack->capacity) {
     return false;
   }
@@ -30,7 +30,7 @@ bool push_int_stack(IntStack *stack, int item) {
   return true;
 }
 
-bool pop_int_stack(IntStack *stack, int *return_item) {
+bool push_int_from_stack(IntStack *stack, int *return_item) {
   if (stack->top == 0) {
     return false;
   }
@@ -38,4 +38,11 @@ bool pop_int_stack(IntStack *stack, int *return_item) {
   stack->top--;
   *return_item = stack->items[stack->top];
   return true;
+}
+
+void print_stack(IntStack *stack) {
+  for (int i = 0; i < stack->top; i++) {
+    printf("[%d]", stack->items[i]);
+  }
+  printf("\n");
 }

@@ -48,7 +48,7 @@ void split(char *line, StringArray *array) {
         word[word_len] = '\0';
 
         // Copy to the token array
-        add_string_array(array, word);
+        add_string_to_array(array, word);
       }
 
       // Step forward
@@ -66,11 +66,15 @@ void interpret(IntStack *stack, StringArray *array) {
     // printf("%s", string_array.tokens[i]);
     // printf("\n");
     char* word = array->tokens[i];
+
+    // SWITCH
+    // Look for word
+    // check numebr
+    // print identifier back to console with question
+
     if (is_number(word)) {
-      // TODO: convert to number and push to stack
       int number = strtol(word, NULL, 10);
-      printf("Number: %lu", number);
-      printf("\n");
+      push_int_to_stack(stack, number);
     } else {
       printf("Word: %s", word);
       printf("\n");
