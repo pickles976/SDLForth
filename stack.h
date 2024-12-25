@@ -14,7 +14,8 @@ typedef struct
 
 IntStack *new_int_stack(size_t capacity);
 bool push_int_to_stack(IntStack *stack, int item);
-bool push_int_from_stack(IntStack *stack, int *return_item);
+bool pop_int_from_stack(IntStack *stack, int *return_item);
+bool peek_int_from_stack(IntStack *stack, int *return_item);
 void print_stack(IntStack *stack);
 void free_stack(IntStack *stack);
 

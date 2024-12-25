@@ -30,13 +30,21 @@ bool push_int_to_stack(IntStack *stack, int item) {
   return true;
 }
 
-bool push_int_from_stack(IntStack *stack, int *return_item) {
+bool pop_int_from_stack(IntStack *stack, int *return_item) {
   if (stack->top == 0) {
     return false;
   }
 
   stack->top--;
   *return_item = stack->items[stack->top];
+  return true;
+}
+
+bool peek_int_from_stack(IntStack *stack, int *return_item) {
+  if (stack->top == 0) {
+    return false;
+  }
+  *return_item = stack->items[stack->top - 1];
   return true;
 }
 

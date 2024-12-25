@@ -1,4 +1,5 @@
 #include "interpreter.h"
+#include "builtins.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -60,6 +61,22 @@ void split(char *line, StringArray *array) {
   }
 }
 
+bool built_in_dispatch(IntStack *stack, char *word) {
+
+  if (strcmp(word, "DUP") == 0) {
+    return builtin_dup(stack);
+  } else if (strcmp(word, "DROP") == 0) {
+    return builtin_drop(stack);
+  } else if (strcmp(word, "SWAP") == 0) {
+    return builtin_swap(stack);
+  } else if (strcmp(word, ".") == 0) {
+    return builtin_dot(stack);
+  } else {
+    return false;
+  }
+
+}
+
 void interpret(IntStack *stack, StringArray *array) {
 
   for (int i = 0; i < array->count; i++) {
@@ -76,8 +93,13 @@ void interpret(IntStack *stack, StringArray *array) {
       int number = strtol(word, NULL, 10);
       push_int_to_stack(stack, number);
     } else {
-      printf("Word: %s", word);
-      printf("\n");
+      bool found_builtin = built_in_dispatch(stack, word);
+
+      if (!found_builtin) {
+        printf("%s?", word);
+        printf("\n");
+      } 
+
     }
 
   }
