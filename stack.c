@@ -20,32 +20,32 @@ IntStack *new_int_stack(size_t capacity) {
   return stack;
 }
 
-bool push_int_to_stack(IntStack *stack, int item) {
+IntStackResult push_int_to_stack(IntStack *stack, int item) {
   if (stack->top == stack->capacity) {
-    return false;
+    return STACK_OVERFLOW_ERR;
   }
 
   stack->items[stack->top] = item;
   stack->top++;
-  return true;
+  return OK;
 }
 
-bool pop_int_from_stack(IntStack *stack, int *return_item) {
+IntStackResult pop_int_from_stack(IntStack *stack, int *return_item) {
   if (stack->top == 0) {
-    return false;
+    return STACK_UNDERFLOW_ERR;
   }
 
   stack->top--;
   *return_item = stack->items[stack->top];
-  return true;
+  return OK;
 }
 
-bool peek_int_from_stack(IntStack *stack, int *return_item) {
+IntStackResult peek_int_from_stack(IntStack *stack, int *return_item) {
   if (stack->top == 0) {
-    return false;
+    return STACK_UNDERFLOW_ERR;
   }
   *return_item = stack->items[stack->top - 1];
-  return true;
+  return OK;
 }
 
 void print_stack(IntStack *stack) {

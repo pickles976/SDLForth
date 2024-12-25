@@ -2,36 +2,34 @@
 #include "builtins.h"
 
 bool builtin_dup(IntStack *stack) {
-
     int peeked_value;
-    if (peek_int_from_stack(stack, &peeked_value)) {
-        return push_int_to_stack(stack, peeked_value);
-    }
-    return false;
-
+    HANDLE_UNDERFLOW(peek_int_from_stack(stack, &peeked_value));
+    HANDLE_OVERFLOW(push_int_to_stack(stack, peeked_value));
+    return true;
 }
 
 bool builtin_drop(IntStack *stack) {
     int popped_value;
-    return pop_int_from_stack(stack, &popped_value);
+    HANDLE_UNDERFLOW(pop_int_from_stack(stack, &popped_value));
+    return true;
 }
 
 bool builtin_swap(IntStack *stack) {
     int first, next;
-    if (pop_int_from_stack(stack, &first)) {
-        if (pop_int_from_stack(stack, &next)) {
-            return push_int_to_stack(stack, first) && push_int_to_stack(stack, next);
-        }
-    }
-    return false;
+
+    HANDLE_UNDERFLOW(pop_int_from_stack(stack, &first));
+    HANDLE_UNDERFLOW(pop_int_from_stack(stack, &next));
+
+    HANDLE_OVERFLOW(push_int_to_stack(stack, first));
+    HANDLE_OVERFLOW(push_int_to_stack(stack, next));
+
+    return true;
 }
 
 bool builtin_dot(IntStack *stack) {
     int popped_value;
-    if (pop_int_from_stack(stack, &popped_value)) {
-        printf("%d", popped_value);
-        printf("\n");
-        return true;
-    }
-    return false;
+    HANDLE_UNDERFLOW(pop_int_from_stack(stack, &popped_value));
+    printf("%d", popped_value);
+    printf("\n");
+    return true;
 }

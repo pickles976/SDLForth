@@ -10,11 +10,11 @@ https://skilldrick.github.io/easyforth/
 - [x] refactor data structures
 - [x] iterate over tokens
 - [x] push numeric tokens onto stack
-- [ ] if statements to run built-in functions 
-    - [ ] DUP
-    - [ ] DROP
-    - [ ] SWAP
-    - [ ] .
+- [x] if statements to run built-in functions 
+    - [x] DUP
+    - [x] DROP
+    - [x] SWAP
+    - [x] .
 - [ ] static dispatch table for built-in functions
 - [ ] refactor built-ins to use dispatch table
 - [ ] create a dynamic dispatch table for user-defined functions { string: list[Token] }

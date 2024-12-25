@@ -62,19 +62,18 @@ void split(char *line, StringArray *array) {
 }
 
 bool built_in_dispatch(IntStack *stack, char *word) {
-
   if (strcmp(word, "DUP") == 0) {
-    return builtin_dup(stack);
+    builtin_dup(stack);
   } else if (strcmp(word, "DROP") == 0) {
-    return builtin_drop(stack);
+    builtin_drop(stack);
   } else if (strcmp(word, "SWAP") == 0) {
-    return builtin_swap(stack);
+    builtin_swap(stack);
   } else if (strcmp(word, ".") == 0) {
-    return builtin_dot(stack);
+    builtin_dot(stack);
   } else {
     return false;
   }
-
+  return true;
 }
 
 void interpret(IntStack *stack, StringArray *array) {

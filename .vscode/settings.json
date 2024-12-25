@@ -3,6 +3,7 @@
         "format": "c",
         "array": "c",
         "vector": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "functional": "cpp"
     }
 }
