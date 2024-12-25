@@ -54,3 +54,8 @@ void print_stack(IntStack *stack) {
   }
   printf("\n");
 }
+
+void free_stack(IntStack *stack) {
+  free(stack->items);
+  free(stack);
+}

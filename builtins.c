@@ -1,3 +1,10 @@
+/*
+    These functions are NOT ATOMIC! They will leave a bunch of crap on your 
+    stack if they fail halfway through.
+
+    Maybe I will just exit if these fail. Not sure.
+*/
+
 #include "stack.h"
 #include "builtins.h"
 
