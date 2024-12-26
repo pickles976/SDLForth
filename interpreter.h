@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "string_array.h"
 #include "stack.h"
-#include "d_table_static.h"
+#include "dtable_static.h"
 
 bool is_digit(char c);
 bool is_number(char* word);

@@ -1,4 +1,4 @@
-#include "d_table_static.h"
+#include "dtable_static.h"
 #include <stdio.h>
 
 // WARNING: NOT EVALUATED. idk how rare collisions are with this hash function
