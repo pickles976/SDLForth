@@ -9,6 +9,8 @@ static void repl() {
   IntStack *stack = new_int_stack(256);
   StringArray *array = new_string_array(256);
   SD_Table *builtin_table = new_sd_table(64);
+  DD_Table *dispatch_table = new_dd_table(2);
+
   init_builtin_table(builtin_table);
   print_sd_table_keys(builtin_table);
 
@@ -22,7 +24,7 @@ static void repl() {
     }
 
     split(line, array);
-    interpret(stack, array, builtin_table);
+    interpret(stack, array, builtin_table, dispatch_table);
     print_stack(stack);
     clear_string_array(array);
     

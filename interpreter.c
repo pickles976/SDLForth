@@ -77,7 +77,38 @@ bool built_in_dispatch(IntStack *stack, SD_Table *builtin_table, char *word) {
   return false;
 }
 
-void interpret(IntStack *stack, StringArray *array, SD_Table *builtin_table) {
+void define_user_function(StringArray *array, DD_Table *dispatch_table) {
+
+  // Bounds checking
+  size_t line_len = array->count;
+  bool ends_with_semicolon = strcmp(array->tokens[line_len - 1], ";") == 0;
+  bool has_enough_tokens = line_len >= 4; // : NAME [WORDS] ;
+  if (!ends_with_semicolon || !has_enough_tokens) {
+    printf("ERROR, EXPECTED: ': NAME [WORDS] ;'");
+    printf("\n");
+  }
+
+  // Copy pointers to new array
+  StringArray *copy_array = new_string_array(line_len - 3);
+  for (size_t i = 2; i < line_len - 1; i++) {
+    add_string_to_array(copy_array, array->tokens[i]);
+  }
+  // Insert item into table
+  insert_item_dd_table(dispatch_table, array->tokens[1], copy_array);
+  // print_dd_table_keys(dispatch_table);
+  // print_dd_table_values(dispatch_table);
+}
+
+bool function_dispatch(IntStack *stack, SD_Table *builtin_table, DD_Table *dispatch_table, char *word) {
+  StringArray *return_item;
+  bool found_function = get_item_dd_table(dispatch_table, word, &return_item);
+  if (found_function) {
+    interpret(stack, return_item, builtin_table, dispatch_table);
+  }
+  return found_function;
+}
+
+void interpret(IntStack *stack, StringArray *array, SD_Table *builtin_table, DD_Table *dispatch_table) {
 
   // Loop over words
   for (int i = 0; i < array->count; i++) {
@@ -86,13 +117,19 @@ void interpret(IntStack *stack, StringArray *array, SD_Table *builtin_table) {
     if (is_number(word)) {
       int number = strtol(word, NULL, 10);
       push_int_to_stack(stack, number);
+    } else if (strcmp(word, ":") == 0) {
+      define_user_function(array, dispatch_table);
+      break;
     } else {
-      bool found_builtin = built_in_dispatch(stack, builtin_table, word);
 
-      if (!found_builtin) {
-        printf("%s?", word);
-        printf("\n");
-      } 
+      bool found_builtin = built_in_dispatch(stack, builtin_table, word);
+      if (found_builtin) continue;
+
+      bool found_function = function_dispatch(stack, builtin_table, dispatch_table, word);
+      if (found_function) continue;
+      
+      printf("%s?", word);
+      printf("\n");
 
     }
 

@@ -1,17 +1,6 @@
 #include "dtable_dynamic.h"
+#include "dtable_static.h" // get hash function
 #include <stdio.h>
-
-// WARNING: NOT EVALUATED. idk how rare collisions are with this hash function
-size_t hash_string(char *key)
-{
-    size_t hash = HASH;
-    int c;
-
-    while (c = *key++)
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-
-    return hash;
-}
 
 DD_Table *new_dd_table(size_t capacity) {
     DD_Table *table = malloc(sizeof(DD_Table));
