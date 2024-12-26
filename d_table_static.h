@@ -18,6 +18,7 @@ typedef bool (*BoolFunc)(IntStack*);
 
 typedef struct {
     size_t *keys;
+    char **strings;
     VoidFunc *values;
 
     size_t capacity; // capacity

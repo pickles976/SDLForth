@@ -10,6 +10,7 @@ static void repl() {
   StringArray *array = new_string_array(256);
   SD_Table *builtin_table = new_sd_table(64);
   init_builtin_table(builtin_table);
+  print_sd_table_keys(builtin_table);
 
   char line[1024];
   for (;;) {

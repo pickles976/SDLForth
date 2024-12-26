@@ -18,6 +18,7 @@ SD_Table *new_sd_table(size_t capacity) {
     table->capacity = capacity;
     table->length = 0;
     table->keys = malloc(sizeof(size_t) * capacity);
+    table->strings = malloc(sizeof(char*) * capacity);
     table->values = malloc(sizeof(VoidFunc) * capacity);
 
     for (size_t i = 0; i < capacity; i++) {
@@ -28,7 +29,15 @@ SD_Table *new_sd_table(size_t capacity) {
 }
 
 void free_sd_table(SD_Table *table) {
+
+    for (int i = 0; i < table->capacity; i++) {
+        if (table->keys[i] != EMPTY_KEY) {
+            free(table->strings[i]);
+        }
+    }
+
     free(table->keys);
+    free(table->strings);
     free(table->values);
     free(table);
 }
@@ -44,6 +53,7 @@ bool insert_item_sd_table(SD_Table *table, char *key, VoidFunc value) {
 
     // Linear probe 
     // WARNING: UNTESTED!!!
+    // WARNING: DUPLICATE INSERTS WILL LIVE IN DIFFERENT BUCKETS
     size_t offset = 0;
     for (size_t offset = 0; offset < table->capacity; offset++) {
         size_t index = (modulo_hash + offset) % table->capacity;
@@ -52,6 +62,7 @@ bool insert_item_sd_table(SD_Table *table, char *key, VoidFunc value) {
             // printf("\n");
             table->keys[index] = hash;
             table->values[index] = value;
+            table->strings[index] = key;
             table->length++;
             return true;
         }
@@ -91,7 +102,7 @@ void print_sd_table_keys(SD_Table *table) {
     printf("Keys: ");
     for (size_t i = 0; i < table->capacity; i++) {
         if (table->keys[i] != EMPTY_KEY) {
-            printf("%d, ", table->keys[i]);
+            printf("%s, ", table->strings[i]);
         }
     }
     printf("\n");
