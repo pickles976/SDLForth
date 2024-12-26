@@ -4,6 +4,7 @@
         "array": "c",
         "vector": "c",
         "stdio.h": "c",
-        "functional": "cpp"
+        "functional": "cpp",
+        "*.tcc": "c"
     }
 }

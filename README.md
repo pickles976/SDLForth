@@ -15,12 +15,31 @@ https://skilldrick.github.io/easyforth/
     - [x] DROP
     - [x] SWAP
     - [x] .
-- [ ] static dispatch table for built-in functions
-- [ ] refactor built-ins to use dispatch table
-- [ ] create a dynamic dispatch table for user-defined functions { string: list[Token] }
-- [ ] allow user-defined functions
-- [ ] get user-defined functions working
+- [x] static dispatch table for built-in functions
+- [x] refactor built-ins to use dispatch table
 
+#### User-defined functions
+- [ ] create a dynamic dispatch table for user-defined functions { string: list[Token] }
+    - [ ] resizable hash table <size_t, char*>
+- [ ] parse user-defined functions
+- [ ] call user-defined functions
+
+#### Control flow/storage
+- [ ] implement conditionals
+- [ ] implement variables
+- [ ] constants
+- [ ] implement cells
+- [ ] implement begin until
+- [ ] implement input handling
+
+#### Cleanup n stuff
+- [ ] add more built-ins
+- [ ] improve the way of initializing the built-ins table
+
+- [ ] add case-insensitivity
+- [ ] improve "error handling" for stack overflow/underflow errors
+
+#### Performance?
 - [ ] bytecode interpreter?
 - [ ] instead of storing user-defined functions as strings, store them as a list of bytecode instructions
 ex: 

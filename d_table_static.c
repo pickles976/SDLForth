@@ -1,5 +1,7 @@
 #include "d_table_static.h"
+#include <stdio.h>
 
+// WARNING: NOT EVALUATED. idk how rare collisions are with this hash function
 size_t hash_string(char *key)
 {
     size_t hash = HASH;
@@ -16,7 +18,7 @@ SD_Table *new_sd_table(size_t capacity) {
     table->capacity = capacity;
     table->length = 0;
     table->keys = malloc(sizeof(size_t) * capacity);
-    table->values = malloc(sizeof(VoidFunc*) * capacity);
+    table->values = malloc(sizeof(VoidFunc) * capacity);
 
     for (size_t i = 0; i < capacity; i++) {
         table->keys[i] = EMPTY_KEY;
@@ -31,7 +33,7 @@ void free_sd_table(SD_Table *table) {
     free(table);
 }
 
-bool insert_sd_table(SD_Table *table, char *key, VoidFunc *value) {
+bool insert_item_sd_table(SD_Table *table, char *key, VoidFunc value) {
 
     if (table->capacity == table->length) {
         return false;
@@ -40,14 +42,16 @@ bool insert_sd_table(SD_Table *table, char *key, VoidFunc *value) {
     size_t hash = hash_string(key);
     size_t modulo_hash = hash % table->capacity;
 
-    // Linear probe
+    // Linear probe 
+    // WARNING: UNTESTED!!!
     size_t offset = 0;
     for (size_t offset = 0; offset < table->capacity; offset++) {
         size_t index = (modulo_hash + offset) % table->capacity;
-        size_t slot = table->keys[index];
-        if (slot == EMPTY_KEY) {
+        if (table->keys[index] == EMPTY_KEY) {
+            // printf("Inserted %s @ index %d with hash %d", key, index, hash);
+            // printf("\n");
             table->keys[index] = hash;
-            table->values[index] = *value;
+            table->values[index] = value;
             table->length++;
             return true;
         }
@@ -62,22 +66,33 @@ bool get_item_sd_table(SD_Table *table, char *key, VoidFunc *return_item) {
     size_t modulo_hash = hash % table->capacity;
 
     // Linear probe
-    size_t offset = 0;
+    // WARNING: UNTESTED!!!
     for (size_t offset = 0; offset < table->capacity; offset++) {
         size_t index = (modulo_hash + offset) % table->capacity;
         size_t slot = table->keys[index];
 
-        // Slot is empty
         if (slot == EMPTY_KEY) {
             return false;
         } 
         
-        // Slot is not empty, AND keys match
+        // Slot is not empty, AND hash matches
         if (slot == hash) {
-            return_item = &table->values[index];
+            // printf("Got %s @ index %d with hash %d", key, index, hash);
+            // printf("\n");
+            *return_item = table->values[index];
             return true;
         }
     }
 
     return false;
+}
+
+void print_sd_table_keys(SD_Table *table) {
+    printf("Keys: ");
+    for (size_t i = 0; i < table->capacity; i++) {
+        if (table->keys[i] != EMPTY_KEY) {
+            printf("%d, ", table->keys[i]);
+        }
+    }
+    printf("\n");
 }

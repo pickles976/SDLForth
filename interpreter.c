@@ -1,8 +1,6 @@
 #include "interpreter.h"
-#include "builtins.h"
 #include <stdio.h>
 #include <string.h>
-
 
 bool is_digit(char c) { return c >= '0' && c <= '9'; }
 
@@ -61,38 +59,35 @@ void split(char *line, StringArray *array) {
   }
 }
 
-bool built_in_dispatch(IntStack *stack, char *word) {
-  if (strcmp(word, "DUP") == 0) {
-    builtin_dup(stack);
-  } else if (strcmp(word, "DROP") == 0) {
-    builtin_drop(stack);
-  } else if (strcmp(word, "SWAP") == 0) {
-    builtin_swap(stack);
-  } else if (strcmp(word, ".") == 0) {
-    builtin_dot(stack);
-  } else {
-    return false;
+bool built_in_dispatch(IntStack *stack, SD_Table *builtin_table, char *word) {
+
+  VoidFunc builtin;
+  bool result = get_item_sd_table(builtin_table, word, &builtin);
+  if (result) {
+    BoolFunc fp = (BoolFunc)builtin;
+
+    bool op_result = fp(stack);
+    if (!op_result) {
+      printf("INVALID OPERATION OCCURED. EXITING...");
+      printf("\n");
+      exit(0);
+    }
+    return true;
   }
-  return true;
+  return false;
 }
 
-void interpret(IntStack *stack, StringArray *array) {
+void interpret(IntStack *stack, StringArray *array, SD_Table *builtin_table) {
 
+  // Loop over words
   for (int i = 0; i < array->count; i++) {
-    // printf("%s", string_array.tokens[i]);
-    // printf("\n");
     char* word = array->tokens[i];
-
-    // SWITCH
-    // Look for word
-    // check numebr
-    // print identifier back to console with question
 
     if (is_number(word)) {
       int number = strtol(word, NULL, 10);
       push_int_to_stack(stack, number);
     } else {
-      bool found_builtin = built_in_dispatch(stack, word);
+      bool found_builtin = built_in_dispatch(stack, builtin_table, word);
 
       if (!found_builtin) {
         printf("%s?", word);
