@@ -1,6 +1,11 @@
 # README
 
-https://skilldrick.github.io/easyforth/
+Attempt at writing a Forth interpreter from scratch, with SDL2 integration for hacking away at small games.
+
+Reference Material:
+[Easy Forth](https://skilldrick.github.io/easyforth/)
+[Starting Forth](https://www.forth.com/starting-forth)
+[Forth C Implementation](https://gist.github.com/lbruder/10007431)
 
 ## TODO:
 
