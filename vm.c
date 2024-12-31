@@ -43,7 +43,6 @@ void step(VM *vm, IntStack *data_stack, IntStack *call_stack, SD_Table *sd_table
         default:
             break;
     }
-
 }
 
 void run(VM *vm, IntStack *data_stack, IntStack *call_stack, SD_Table *sd_table, DD_Table *dd_table) {
