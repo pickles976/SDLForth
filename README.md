@@ -31,9 +31,12 @@ Keys: SWAP, *, +, -, ., /, DROP, DUP,
 Rewrite as a VM-based interpreter
 - [ ] instruction struct and functions
 - [ ] vm struct and functions
-- [ ] Call stack
+- [ ] test VM out by pushing some VALUE instructions to it, and running it, then printing the stack
 - [ ] refactor DD table
 - [ ] handle populating VM with builtins
+- [ ] get parsing loop working again
+- [ ] test out calling built-in words
+- [ ] Call stack
 - [ ] handle user-defined words
 - [ ] jump and return
 

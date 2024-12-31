@@ -14,6 +14,8 @@
 #define EMPTY_KEY SIZE_MAX
 
 typedef void (*VoidFunc)(IntStack*);
+typedef bool (*BoolFunc)(IntStack*);
+
 
 typedef struct {
     size_t *hashes;

@@ -2,7 +2,7 @@
 #define BUILTINS_H
 
 #include "stack.h"
-#include "dtable_static.h"
+#include "sd_table.h"
 #include <stdio.h>
 #include <stdbool.h>
 

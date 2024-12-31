@@ -40,6 +40,36 @@
 int main(int argc, const char *argv[]) {
 
   VM *vm = newVM(1024);
+  IntStack *data_stack = new_int_stack(256);
+  IntStack *call_stack = new_int_stack(256);
+  SD_Table *sd_table = new_sd_table(64);
+  DD_Table *dd_table = new_dd_table(2);
+
+  init_builtin_table(sd_table);
+  print_sd_table_keys(sd_table);
+
+  U_ByteCode byte_0;
+  byte_0.value = 123;
+  addInstruction(vm, VALUE, byte_0);
+  step(vm, data_stack, call_stack, sd_table, dd_table);
+
+  printf("STACK: ");
+  print_stack(data_stack);
+
+  printf("VM: ");
+  printVM(vm);
+
+  U_ByteCode byte_1;
+  byte_1.builtin = (VoidFunc)builtin_dup;
+  addInstruction(vm, BUILTIN, byte_1);
+  step(vm, data_stack, call_stack, sd_table, dd_table);
+
+  printf("STACK: ");
+  print_stack(data_stack);
+
+  printf("VM: ");
+  printVM(vm);
+
 
   return 0;
 }

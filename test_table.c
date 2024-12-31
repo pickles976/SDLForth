@@ -1,6 +1,6 @@
 
 #include <stdio.h>
-#include "dtable_dynamic.h"
+#include "dd_table.h"
 #include "string_array.h"
 
 int main(int argc, const char *argv[]) {

@@ -4,8 +4,9 @@
 #include <stdbool.h>
 #include "string_array.h"
 #include "stack.h"
-#include "dtable_static.h"
-#include "dtable_dynamic.h"
+#include "sd_table.h"
+#include "dd_table.h"
+
 
 bool is_digit(char c);
 bool is_number(char* word);

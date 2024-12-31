@@ -1,5 +1,5 @@
-#include "dtable_dynamic.h"
-#include "dtable_static.h" // get hash function
+#include "dd_table.h"
+#include "sd_table.h" // get hash function
 #include <stdio.h>
 
 DD_Table *new_dd_table(size_t capacity) {
