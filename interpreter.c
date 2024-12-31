@@ -77,56 +77,71 @@ bool built_in_dispatch(IntStack *stack, SD_Table *builtin_table, char *word) {
   return false;
 }
 
-void define_user_function(StringArray *array, DD_Table *dispatch_table) {
+// void define_user_function(StringArray *array, DD_Table *dispatch_table) {
 
-  // Bounds checking
-  size_t line_len = array->count;
-  bool ends_with_semicolon = strcmp(array->tokens[line_len - 1], ";") == 0;
-  bool has_enough_tokens = line_len >= 4; // : NAME [WORDS] ;
-  if (!ends_with_semicolon || !has_enough_tokens) {
-    printf("ERROR, EXPECTED: ': NAME [WORDS] ;'");
-    printf("\n");
-  }
+//   // Bounds checking
+//   size_t line_len = array->count;
+//   bool ends_with_semicolon = strcmp(array->tokens[line_len - 1], ";") == 0;
+//   bool has_enough_tokens = line_len >= 4; // : NAME [JUMPS] ;
+//   if (!ends_with_semicolon || !has_enough_tokens) {
+//     printf("ERROR, EXPECTED: ': NAME [JUMPS] ;'");
+//     printf("\n");
+//   }
 
-  // Copy pointers to new array
-  StringArray *copy_array = new_string_array(line_len - 3);
-  for (size_t i = 2; i < line_len - 1; i++) {
-    add_string_to_array(copy_array, array->tokens[i]);
-  }
-  // Insert item into table
-  insert_item_dd_table(dispatch_table, array->tokens[1], copy_array);
-  // print_dd_table_keys(dispatch_table);
-  // print_dd_table_values(dispatch_table);
-}
+//   // Copy pointers to new array
+//   StringArray *copy_array = new_string_array(line_len - 3);
+//   for (size_t i = 2; i < line_len - 1; i++) {
+//     add_string_to_array(copy_array, array->tokens[i]);
+//   }
+//   // Insert item into table
+//   insert_item_dd_table(dispatch_table, array->tokens[1], copy_array);
+//   // print_dd_table_keys(dispatch_table);
+//   // print_dd_table_values(dispatch_table);
+// }
 
-bool function_dispatch(IntStack *stack, SD_Table *builtin_table, DD_Table *dispatch_table, char *word) {
-  StringArray *return_item;
-  bool found_function = get_item_dd_table(dispatch_table, word, &return_item);
-  if (found_function) {
-    interpret(stack, return_item, builtin_table, dispatch_table);
-  }
-  return found_function;
-}
+// bool function_dispatch(IntStack *stack, SD_Table *builtin_table, DD_Table *dispatch_table, char *word) {
+//   StringArray *return_item;
+//   bool found_function = get_item_dd_table(dispatch_table, word, &return_item);
+//   if (found_function) {
+//     interpret(stack, return_item, builtin_table, dispatch_table);
+//   }
+//   return found_function;
+// }
 
-void interpret(IntStack *stack, StringArray *array, SD_Table *builtin_table, DD_Table *dispatch_table) {
+void interpret(StringArray *array, VM *vm, IntStack *data_stack, IntStack *call_stack, SD_Table *sd_table, DD_Table *dd_table) {
 
   // Loop over words
   for (int i = 0; i < array->count; i++) {
     char* word = array->tokens[i];
 
+    U_ByteCode bytecode;
+
     if (is_number(word)) {
       int number = strtol(word, NULL, 10);
-      push_int_to_stack(stack, number);
+      bytecode.value = number;
+      addInstruction(vm, VALUE, bytecode);
     } else if (strcmp(word, ":") == 0) {
-      define_user_function(array, dispatch_table);
+      // define_user_function(array, dispatch_table);
       break;
     } else {
 
-      bool found_builtin = built_in_dispatch(stack, builtin_table, word);
-      if (found_builtin) continue;
+      // Add function ptr to vm
+      VoidFunc builtin;
+      bool result = get_item_sd_table(sd_table, word, &builtin);
+      if (result) {
+        bytecode.builtin = (VoidFunc)builtin;
+        addInstruction(vm, FUNC, bytecode);
+        continue;
+      }
 
-      bool found_function = function_dispatch(stack, builtin_table, dispatch_table, word);
-      if (found_function) continue;
+      // Add instruction ptr JUMP to 
+      size_t address;
+      result = get_item_dd_table(dd_table, word, &address);
+      if (result) {
+        bytecode.address = address;
+        addInstruction(vm, JUMP, bytecode);
+        continue;
+      }
       
       printf("%s?", word);
       printf("\n");

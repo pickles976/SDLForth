@@ -12,8 +12,8 @@ typedef void (*VoidFunc)(IntStack*);
 
 typedef enum {
     VALUE,
-    BUILTIN,
-    WORD,
+    FUNC,
+    JUMP,
     RETURN
 } InstructionType;
 

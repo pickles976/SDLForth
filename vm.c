@@ -30,10 +30,10 @@ void step(VM *vm, IntStack *data_stack, IntStack *call_stack, SD_Table *sd_table
         case VALUE:
             push_int_to_stack(data_stack, (int)ins.bytecode.value);
             break;
-        case BUILTIN:
+        case FUNC:
             ins.bytecode.builtin(data_stack);
             break;
-        case WORD:
+        case JUMP:
             push_int_to_stack(call_stack, ++vm->ip);
             vm->ip = (size_t)ins.bytecode.address;
             break;
@@ -45,6 +45,7 @@ void step(VM *vm, IntStack *data_stack, IntStack *call_stack, SD_Table *sd_table
         default:
             break;
     }
+    vm->ip++;
 
 }
 
@@ -61,10 +62,10 @@ bool printVM(VM *vm) {
             case VALUE:
                 printf("[VALUE, %d]", instruction.bytecode.value);
                 break;
-            case BUILTIN:
-                printf("[BUILTIN]");
+            case FUNC:
+                printf("[FUNC]");
                 break;
-            case WORD:
+            case JUMP:
                 printf("[ADDRESS, %zd]", instruction.bytecode.address);
                 break;
             case RETURN:

@@ -8,7 +8,7 @@ DD_Table *new_dd_table(size_t capacity) {
     table->length = 0;
     table->keys = malloc(sizeof(size_t) * capacity);
     table->strings = malloc(sizeof(char*) * capacity);
-    table->values = malloc(sizeof(StringArray*) * capacity);
+    table->values = malloc(sizeof(size_t) * capacity);
 
     for (size_t i = 0; i < capacity; i++) {
         table->keys[i] = EMPTY_KEY;
@@ -22,7 +22,6 @@ void free_dd_table(DD_Table *table) {
     for (int i = 0; i < table->capacity; i++) {
         if (table->keys[i] != EMPTY_KEY) {
             free(table->strings[i]);
-            free_string_array(table->values[i]);
         }
     }
 
@@ -32,16 +31,16 @@ void free_dd_table(DD_Table *table) {
     free(table);
 }
 
-bool insert_item_dd_table(DD_Table *table, char *key, StringArray *value) {
+bool insert_item_dd_table(DD_Table *table, char *key, size_t value) {
 
 
     if (table->capacity == table->length) {
         size_t oldCapacity = table->capacity;
         size_t stringsize = sizeof(char*) * oldCapacity;
-        size_t valuesize = sizeof(StringArray*) * oldCapacity;
+        size_t valuesize = sizeof(size_t) * oldCapacity;
 
         char **strings = malloc(stringsize);
-        StringArray **values = malloc(valuesize);
+        size_t *values = malloc(valuesize);
 
         memcpy(strings, table->strings, stringsize);
         memcpy(values, table->values, valuesize);
@@ -82,7 +81,7 @@ bool insert_item_dd_table(DD_Table *table, char *key, StringArray *value) {
 
 }
 
-bool get_item_dd_table(DD_Table *table, char *key, StringArray **return_item) {
+bool get_item_dd_table(DD_Table *table, char *key, size_t *return_item) {
     size_t hash = hash_string(key);
     size_t modulo_hash = hash % table->capacity;
 
@@ -122,7 +121,7 @@ void print_dd_table_values(DD_Table *table) {
     printf("Values: ");
     for (size_t i = 0; i < table->capacity; i++) {
         if (table->keys[i] != EMPTY_KEY) {
-            print_string_array(table->values[i]);
+            printf("%ld, ", table->values[i]);
         }
     }
     printf("\n");

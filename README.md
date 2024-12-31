@@ -16,14 +16,20 @@ Reference Material:
 ## Example
 
 ```commandline
-./forth.exe 
-Keys: SWAP, *, +, -, ., /, DROP, DUP, 
-> 1     
-[1]
-> : 2DUP DUP DUP ;
-[1]
-> 2DUP
-[1][1][1]
+Keys: SWAP, *, +, -, ., /, DROP, DUP
+> 1 2 3
+STACK: [1][2][3]
+VM: [VALUE, 1][VALUE, 2][VALUE, 3]
+> DUP 
+STACK: [1][2][3][3]
+VM: [VALUE, 1][VALUE, 2][VALUE, 3][FUNC]
+> DROP
+STACK: [1][2][3]
+VM: [VALUE, 1][VALUE, 2][VALUE, 3][FUNC][FUNC]
+> SWAP
+STACK: [1][3][2]
+VM: [VALUE, 1][VALUE, 2][VALUE, 3][FUNC][FUNC][FUNC]
+> 
 ```
 
 ## TODO:
