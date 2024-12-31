@@ -14,11 +14,10 @@
 #define EMPTY_KEY SIZE_MAX
 
 typedef void (*VoidFunc)(IntStack*);
-typedef bool (*BoolFunc)(IntStack*);
 
 typedef struct {
-    size_t *keys;
-    char **strings;
+    size_t *hashes;
+    char **keys;
     VoidFunc *values;
 
     size_t capacity; // capacity

@@ -9,7 +9,9 @@ Reference Material:
 [Easy Forth](https://skilldrick.github.io/easyforth/)  
 [Starting Forth](https://www.forth.com/starting-forth)  
 [Forth C Implementation](https://github.com/tehologist/forthkit)  
-[VM Stuff](https://www.andreinc.net/2021/12/01/writing-a-simple-vm-in-less-than-125-lines-of-c)  
+[VM Stuff](https://www.andreinc.net/2021/12/01/writing-a-simple-vm-in-less-than-125-lines-of-c)   
+[Forth Fundamentals](https://archive.org/details/forthfundamental0001mcca)  
+[Thinking Forth](https://www.forth.com/wp-content/uploads/2018/11/thinking-forth-color.pdf)  
 
 ## Example
 
@@ -26,6 +28,16 @@ Keys: SWAP, *, +, -, ., /, DROP, DUP,
 
 ## TODO:
 
+Rewrite as a VM-based interpreter
+- [ ] instruction struct and functions
+- [ ] vm struct and functions
+- [ ] Call stack
+- [ ] refactor DD table
+- [ ] handle populating VM with builtins
+- [ ] handle user-defined words
+- [ ] jump and return
+
+
 #### Control flow/storage
 - [ ] implement conditionals
 - [ ] implement variables
@@ -41,8 +53,3 @@ Keys: SWAP, *, +, -, ., /, DROP, DUP,
 - [ ] improve the way of initializing the built-ins table
 - [ ] add case-insensitivity
 - [ ] improve "error handling" for stack overflow/underflow errors
-
-#### Performance?
-- [ ] bytecode interpreter?
-- [ ] instead of storing user-defined functions as strings to interpret, store them as a list of bytecode instructions
-
