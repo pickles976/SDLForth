@@ -5,6 +5,8 @@
         "vector": "c",
         "stdio.h": "c",
         "functional": "cpp",
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "stack.h": "c",
+        "interpreter.h": "c"
     }
 }

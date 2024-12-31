@@ -1,8 +1,8 @@
+#include <stdio.h>
 #include "interpreter.h"
 #include "stack.h"
 #include "string_array.h"
 #include "builtins.h"
-#include <stdio.h>
 #include "vm.h"
 
 static void repl() {
@@ -28,12 +28,9 @@ static void repl() {
     }
 
     split(line, array);
-    interpret(array, vm, data_stack, call_stack, sd_table, dd_table);
+    interpret(array, vm, sd_table, dd_table);
     run(vm, data_stack, call_stack, sd_table, dd_table);
-    // U_ByteCode byte_1;
-    // byte_1.builtin = (VoidFunc)builtin_dup;
-    // addInstruction(vm, FUNC, byte_1);
-    // step(vm, data_stack, call_stack, sd_table, dd_table);
+
     printf("STACK: ");
     print_stack(data_stack);
     printf("VM: ");

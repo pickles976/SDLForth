@@ -1,7 +1,5 @@
 #include "vm.h"
 
-
-
 VM *newVM(size_t capacity) {
     VM *vm = malloc(sizeof(VM));
     vm->capacity = capacity;
@@ -13,9 +11,7 @@ VM *newVM(size_t capacity) {
 
 bool addInstruction(VM *vm, InstructionType type, U_ByteCode bytecode) {
 
-    if (vm->length == vm->capacity) {
-        return false;
-    }
+    if (vm->length == vm->capacity) return false;
 
     vm->code[vm->length] = (Instruction){ .type = type, .bytecode = bytecode};
     vm->length++;
@@ -25,16 +21,18 @@ bool addInstruction(VM *vm, InstructionType type, U_ByteCode bytecode) {
 
 void step(VM *vm, IntStack *data_stack, IntStack *call_stack, SD_Table *sd_table, DD_Table *dd_table) {
     
-    Instruction ins = vm->code[vm->ip];
+    Instruction ins = vm->code[vm->ip++];
     switch(ins.type) {
         case VALUE:
             push_int_to_stack(data_stack, (int)ins.bytecode.value);
             break;
         case FUNC:
+            // call our builtin function
             ins.bytecode.builtin(data_stack);
             break;
         case JUMP:
-            push_int_to_stack(call_stack, ++vm->ip);
+            // Push current address to call stack so we dont forget it, and jump the IP to the specified address
+            push_int_to_stack(call_stack, vm->ip);
             vm->ip = (size_t)ins.bytecode.address;
             break;
         case RETURN:
@@ -45,7 +43,6 @@ void step(VM *vm, IntStack *data_stack, IntStack *call_stack, SD_Table *sd_table
         default:
             break;
     }
-    vm->ip++;
 
 }
 
@@ -66,7 +63,7 @@ bool printVM(VM *vm) {
                 printf("[FUNC]");
                 break;
             case JUMP:
-                printf("[ADDRESS, %zd]", instruction.bytecode.address);
+                printf("[JUMP, %zd]", instruction.bytecode.address);
                 break;
             case RETURN:
                 printf("[RETURN]");

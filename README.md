@@ -16,36 +16,37 @@ Reference Material:
 ## Example
 
 ```commandline
-Keys: SWAP, *, +, -, ., /, DROP, DUP
-> 1 2 3
-STACK: [1][2][3]
-VM: [VALUE, 1][VALUE, 2][VALUE, 3]
-> DUP 
-STACK: [1][2][3][3]
-VM: [VALUE, 1][VALUE, 2][VALUE, 3][FUNC]
-> DROP
-STACK: [1][2][3]
-VM: [VALUE, 1][VALUE, 2][VALUE, 3][FUNC][FUNC]
-> SWAP
-STACK: [1][3][2]
-VM: [VALUE, 1][VALUE, 2][VALUE, 3][FUNC][FUNC][FUNC]
-> 
+Keys: SWAP, *, +, -, ., /, DROP, DUP, 
+> 1
+STACK: [1]
+VM: [VALUE, 1]
+> : 2DUP DUP DUP ;
+STACK: [1]
+VM: [VALUE, 1][FUNC][FUNC][RETURN]
+> 2DUP
+STACK: [1][1][1]
+VM: [VALUE, 1][FUNC][FUNC][RETURN][JUMP, 1]
+> 3
+STACK: [1][1][1][3]
+VM: [VALUE, 1][FUNC][FUNC][RETURN][JUMP, 1][VALUE, 3]
+> : 4DUP 2DUP 2DUP ;
+STACK: [1][1][1][3]
+VM: [VALUE, 1][FUNC][FUNC][RETURN][JUMP, 1][VALUE, 3][JUMP, 1][JUMP, 1][RETURN]
+> 4DUP
+STACK: [1][1][1][3][3][3][3][3]
+VM: [VALUE, 1][FUNC][FUNC][RETURN][JUMP, 1][VALUE, 3][JUMP, 1][JUMP, 1][RETURN][JUMP, 6]
 ```
 
 ## TODO:
 
-Rewrite as a VM-based interpreter
-- [ ] instruction struct and functions
-- [ ] vm struct and functions
-- [ ] test VM out by pushing some VALUE instructions to it, and running it, then printing the stack
-- [ ] refactor DD table
-- [ ] handle populating VM with builtins
-- [ ] get parsing loop working again
-- [ ] test out calling built-in words
-- [ ] Call stack
-- [ ] handle user-defined words
-- [ ] jump and return
+Write some tests
 
+(can we consolidate sd and dd table?)
+- [ ] dd table
+- [ ] sd table
+- [ ] stack
+- [ ] vm
+- [ ] improve error handling
 
 #### Control flow/storage
 - [ ] implement conditionals
@@ -61,4 +62,3 @@ Rewrite as a VM-based interpreter
 - [ ] add all built-ins
 - [ ] improve the way of initializing the built-ins table
 - [ ] add case-insensitivity
-- [ ] improve "error handling" for stack overflow/underflow errors

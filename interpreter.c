@@ -59,56 +59,49 @@ void split(char *line, StringArray *array) {
   }
 }
 
-bool built_in_dispatch(IntStack *stack, SD_Table *builtin_table, char *word) {
+void define_user_function(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_table) {
+  /**
+   * Example Input: [":", "2DUP", "DUP", "DUP", ";"]
+   * 
+   * ----------> ip
+   * VM: [PREV][*DUP][*DUP][RETURN]
+   * 
+   * DD_TABLE: { 2DUP : ip }
+   * 
+   * Now when the interpreter reads "2DUP", it will add a JUMP instruction with the address ip.
+   */
 
-  VoidFunc builtin;
-  bool result = get_item_sd_table(builtin_table, word, &builtin);
-  if (result) {
-    BoolFunc fp = (BoolFunc)builtin;
-
-    bool op_result = fp(stack);
-    if (!op_result) {
-      printf("INVALID OPERATION OCCURED. EXITING...");
-      printf("\n");
-      exit(0);
-    }
-    return true;
+  // Bounds checking
+  size_t line_len = array->count;
+  bool ends_with_semicolon = strcmp(array->tokens[line_len - 1], ";") == 0;
+  bool has_enough_tokens = line_len >= 4; // : NAME [WORDS] ;
+  if (!ends_with_semicolon || !has_enough_tokens) {
+    printf("ERROR, EXPECTED: ': NAME [WORDS] ;'");
+    printf("\n");
   }
-  return false;
+
+  // Copy pointers to new array
+  StringArray *copy_array = new_string_array(line_len - 3);
+  for (size_t i = 2; i < line_len - 1; i++) {
+    add_string_to_array(copy_array, array->tokens[i]);
+  }
+
+  // TODO: might need to modify this bit of code to allow of re-definition of functions
+  // Insert current address into table
+  insert_item_dd_table(dd_table, array->tokens[1], vm->length);
+
+  // Add instructions into vm (requires recursion)
+  interpret(copy_array, vm, sd_table, dd_table);
+
+  // Add return instruction
+  U_ByteCode bytecode;
+  addInstruction(vm, RETURN, bytecode);
+
+  // skip over function definition
+  vm->ip = vm->length;
 }
 
-// void define_user_function(StringArray *array, DD_Table *dispatch_table) {
-
-//   // Bounds checking
-//   size_t line_len = array->count;
-//   bool ends_with_semicolon = strcmp(array->tokens[line_len - 1], ";") == 0;
-//   bool has_enough_tokens = line_len >= 4; // : NAME [JUMPS] ;
-//   if (!ends_with_semicolon || !has_enough_tokens) {
-//     printf("ERROR, EXPECTED: ': NAME [JUMPS] ;'");
-//     printf("\n");
-//   }
-
-//   // Copy pointers to new array
-//   StringArray *copy_array = new_string_array(line_len - 3);
-//   for (size_t i = 2; i < line_len - 1; i++) {
-//     add_string_to_array(copy_array, array->tokens[i]);
-//   }
-//   // Insert item into table
-//   insert_item_dd_table(dispatch_table, array->tokens[1], copy_array);
-//   // print_dd_table_keys(dispatch_table);
-//   // print_dd_table_values(dispatch_table);
-// }
-
-// bool function_dispatch(IntStack *stack, SD_Table *builtin_table, DD_Table *dispatch_table, char *word) {
-//   StringArray *return_item;
-//   bool found_function = get_item_dd_table(dispatch_table, word, &return_item);
-//   if (found_function) {
-//     interpret(stack, return_item, builtin_table, dispatch_table);
-//   }
-//   return found_function;
-// }
-
-void interpret(StringArray *array, VM *vm, IntStack *data_stack, IntStack *call_stack, SD_Table *sd_table, DD_Table *dd_table) {
+void interpret(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_table) {
 
   // Loop over words
   for (int i = 0; i < array->count; i++) {
@@ -117,11 +110,13 @@ void interpret(StringArray *array, VM *vm, IntStack *data_stack, IntStack *call_
     U_ByteCode bytecode;
 
     if (is_number(word)) {
+      // Add constant number to bytecode array
       int number = strtol(word, NULL, 10);
       bytecode.value = number;
       addInstruction(vm, VALUE, bytecode);
     } else if (strcmp(word, ":") == 0) {
-      // define_user_function(array, dispatch_table);
+      // Define user functions
+      define_user_function(array, vm, sd_table, dd_table);
       break;
     } else {
 
