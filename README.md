@@ -39,14 +39,16 @@ VM: [VALUE, 1][FUNC][FUNC][RETURN][JUMP, 1][VALUE, 3][JUMP, 1][JUMP, 1][RETURN][
 
 ## TODO:
 
-Write some tests
+Add more builtins
+- [ ] OVER
+- [ ] ROT
+- [ ] MOD
+- [ ] /MOD
 
-(can we consolidate sd and dd table?)
-- [ ] dd table
-- [ ] sd table
-- [ ] stack
-- [ ] vm
-- [ ] improve error handling
+Read Starting Forth Ch 4
+https://www.forth.com/starting-forth/4-conditional-if-then-statements/
+
+Write some tests
 
 #### Control flow/storage
 - [ ] implement conditionals
@@ -55,6 +57,14 @@ Write some tests
 - [ ] implement cells
 - [ ] implement begin until
 - [ ] implement input handling
+
+#### Tests
+Can we consolidate dd table and sd table?
+- [ ] dd table
+- [ ] sd table
+- [ ] stack
+- [ ] vm
+- [ ] improve error handling
 
 #### Cleanup n stuff
 - [ ] read multiple lines
