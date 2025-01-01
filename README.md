@@ -33,10 +33,10 @@ VM: [FUNC][FUNC][RETURN][JUMP, 0][JUMP, 0][RETURN][VALUE, 2][JUMP, 3]
 
 ## TODO:
 - [x] implement conditionals
-- [ ] handle when there is stuff before "IF"
-    - [ ] implement StringArray copying
-    - [ ] get: `: ZERO? 0 = IF 13 . ;" working
-
+- [x] handle when there is stuff before "IF"
+    - [x] implement StringArray copying
+    - [x] get: `: ZERO? 0 = IF 13 . ;" working
+- [ ] implement "ELSE"
 - [ ] add strings (disallow spaces for simplicity)
 
 Add more builtins
@@ -60,7 +60,6 @@ Read Starting Forth Ch 4
 https://www.forth.com/starting-forth/4-conditional-if-then-statements/
 
 #### Control flow/storage
-- [ ] implement "ELSE"
 - [ ] implement variables
 - [ ] constants
 - [ ] implement cells

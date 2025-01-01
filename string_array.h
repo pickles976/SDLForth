@@ -12,6 +12,7 @@ typedef struct {
 } StringArray;
 
 StringArray *new_string_array(size_t capacity);
+StringArray *get_subarray(StringArray* array, int begin, int end);
 void clear_string_array(StringArray* array);
 bool add_string_to_array(StringArray* array, char* word);
 void free_string_array(StringArray* array);

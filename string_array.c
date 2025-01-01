@@ -7,6 +7,15 @@ StringArray *new_string_array(size_t capacity) {
     array->tokens = malloc(sizeof(char*) * capacity);
 }
 
+StringArray *get_subarray(StringArray* array, int begin, int end) {
+    int new_size = end - begin;
+    StringArray *new_array = new_string_array(new_size);
+    for (size_t i = begin; i < end; i++) {
+        add_string_to_array(new_array, array->tokens[i]);
+    }
+    return new_array;
+}
+
 void clear_string_array(StringArray* array) {
     array->count = 0;
 }

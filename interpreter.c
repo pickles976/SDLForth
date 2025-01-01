@@ -124,8 +124,6 @@ void defineIfStatement(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table 
     i++;
   }
 
-  print_string_array(array);
-
   // "THEN" not found
   if (index == -1) {
     printf("EXPECTED ': WORD ___ IF ___ THEN ___ ;");
@@ -141,22 +139,17 @@ void defineIfStatement(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table 
   addInstruction(vm, BRANCH, bytecode);
 
   // Assemble bytecode to be executed on IF
-  StringArray *if_array = new_string_array(index);
-  for (size_t i = 1; i < index; i++) { // Start at 1 to exclude IF
-    add_string_to_array(if_array, array->tokens[i]);
-  }
-  interpret(if_array, vm, sd_table, dd_table);
+  StringArray *if_branch = get_subarray(array, 1, index); // Start at 1 to exclude IF
+  // print_string_array(if_branch);
+  interpret(if_branch, vm, sd_table, dd_table);
 
   // Set BRANCH address to code executed by THEN
   vm->code[branch_position].bytecode.address = vm->length;
 
   // Assemble bytecode to be executed on THEN
-  size_t then_length = array->count - index;
-  StringArray *then_array = new_string_array(then_length);
-  for (size_t i = 1; i < then_length - 1; i++) { // start at 1 to skip "THEN"
-    add_string_to_array(then_array, array->tokens[i]);
-  }
-  interpret(then_array, vm, sd_table, dd_table);
+  StringArray *then_branch = get_subarray(array, index + 1, array->count);
+  // print_string_array(then_branch);
+  interpret(then_branch, vm, sd_table, dd_table);
 
 }
 
@@ -178,9 +171,8 @@ void interpret(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_tabl
       defineUserFunction(array, vm, sd_table, dd_table);
       break;
     } else if (strcmp(word, "IF") == 0) {
-      // TODO: handle when "IF" is not the first word on the line
-      // TODO: function to copy sublist from StringArray
-      defineIfStatement(array, vm, sd_table, dd_table);
+      StringArray *copy_array = get_subarray(array, i, array->count);
+      defineIfStatement(copy_array, vm, sd_table, dd_table);
       break;
     } else {
 
