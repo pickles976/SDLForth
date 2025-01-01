@@ -6,13 +6,19 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-bool builtin_dup(IntStack *stack);
+bool b_dup(IntStack *stack);
 
-bool builtin_drop(IntStack *stack);
+bool b_drop(IntStack *stack);
 
-bool builtin_swap(IntStack *stack);
+bool b_swap(IntStack *stack);
 
-bool builtin_dot(IntStack *stack);
+bool b_dot(IntStack *stack);
+
+bool b_eq(IntStack *stack);
+
+bool b_lt(IntStack *stack);
+
+bool b_gt(IntStack *stack);
 
 bool init_builtin_table(SD_Table *table);
 

@@ -124,9 +124,11 @@ void defineIfStatement(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table 
     i++;
   }
 
+  print_string_array(array);
+
   // "THEN" not found
   if (index == -1) {
-    printf("EXPECTED ': IF ___ THEN ___ ;");
+    printf("EXPECTED ': WORD ___ IF ___ THEN ___ ;");
     printf("\n");
     return;
   }
@@ -176,6 +178,8 @@ void interpret(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_tabl
       defineUserFunction(array, vm, sd_table, dd_table);
       break;
     } else if (strcmp(word, "IF") == 0) {
+      // TODO: handle when "IF" is not the first word on the line
+      // TODO: function to copy sublist from StringArray
       defineIfStatement(array, vm, sd_table, dd_table);
       break;
     } else {

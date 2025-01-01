@@ -5,7 +5,7 @@ I am aware that having resizable hash tables is overkill for a Forth. This is re
 *an* interpreter for what is probably the easiest language to interpret. I hope for this to be a stepping 
 stone to writing something like a Scheme interpreter, as well as having an excuse to write some data structures in C. 
 
-Reference Material:
+Reference Material:  
 [Easy Forth](https://skilldrick.github.io/easyforth/)  
 [Starting Forth](https://www.forth.com/starting-forth)  
 [Forth C Implementation](https://github.com/tehologist/forthkit)  
@@ -33,11 +33,16 @@ VM: [FUNC][FUNC][RETURN][JUMP, 0][JUMP, 0][RETURN][VALUE, 2][JUMP, 3]
 
 ## TODO:
 - [x] implement conditionals
+- [ ] handle when there is stuff before "IF"
+    - [ ] implement StringArray copying
+    - [ ] get: `: ZERO? 0 = IF 13 . ;" working
+
+- [ ] add strings (disallow spaces for simplicity)
 
 Add more builtins
-- [ ] =
-- [ ] >
-- [ ] <
+- [x] =
+- [x] >
+- [x] <
 - [ ] OVER
 - [ ] ROT
 - [ ] MOD

@@ -8,20 +8,20 @@
 #include "stack.h"
 #include "builtins.h"
 
-bool builtin_dup(IntStack *stack) {
+bool b_dup(IntStack *stack) {
     int peeked_value;
     HANDLE_UNDERFLOW(peek_int_from_stack(stack, &peeked_value));
     HANDLE_OVERFLOW(push_int_to_stack(stack, peeked_value));
     return true;
 }
 
-bool builtin_drop(IntStack *stack) {
+bool b_drop(IntStack *stack) {
     int popped_value;
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &popped_value));
     return true;
 }
 
-bool builtin_swap(IntStack *stack) {
+bool b_swap(IntStack *stack) {
     int first, next;
 
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &first));
@@ -33,7 +33,7 @@ bool builtin_swap(IntStack *stack) {
     return true;
 }
 
-bool builtin_dot(IntStack *stack) {
+bool b_dot(IntStack *stack) {
     int popped_value;
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &popped_value));
     printf("%d", popped_value);
@@ -41,7 +41,7 @@ bool builtin_dot(IntStack *stack) {
     return true;
 }
 
-bool builtin_add(IntStack *stack) {
+bool b_add(IntStack *stack) {
     int augend, addend;
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &augend));
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &addend));
@@ -49,7 +49,7 @@ bool builtin_add(IntStack *stack) {
     return true;
 }
 
-bool builtin_subtract(IntStack *stack) {
+bool b_sub(IntStack *stack) {
     int subtrahend, minuend;
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &subtrahend));
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &minuend));
@@ -57,7 +57,7 @@ bool builtin_subtract(IntStack *stack) {
     return true;
 }
 
-bool builtin_multiply(IntStack *stack) {
+bool b_mult(IntStack *stack) {
     int multiplicand, multiplier;
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &multiplicand));
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &multiplier));
@@ -65,7 +65,7 @@ bool builtin_multiply(IntStack *stack) {
     return true;
 }
 
-bool builtin_divide(IntStack *stack) {
+bool b_div(IntStack *stack) {
     int divisor, dividend;
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &divisor));
     HANDLE_UNDERFLOW(pop_int_from_stack(stack, &dividend));
@@ -74,16 +74,48 @@ bool builtin_divide(IntStack *stack) {
     return true;
 }
 
+bool b_eq(IntStack *stack) {
+    int first, second;
+    HANDLE_UNDERFLOW(pop_int_from_stack(stack, &first));
+    HANDLE_UNDERFLOW(pop_int_from_stack(stack, &second));
+    int result = first == second ? 1 : 0;
+    HANDLE_OVERFLOW(push_int_to_stack(stack, result));
+    return true;
+}
+
+bool b_lt(IntStack *stack) {
+    int first, second;
+    HANDLE_UNDERFLOW(pop_int_from_stack(stack, &first));
+    HANDLE_UNDERFLOW(pop_int_from_stack(stack, &second));
+    int result = first < second ? 1 : 0;
+    HANDLE_OVERFLOW(push_int_to_stack(stack, result));
+    return true;
+}
+
+bool b_gt(IntStack *stack) {
+    int first, second;
+    HANDLE_UNDERFLOW(pop_int_from_stack(stack, &first));
+    HANDLE_UNDERFLOW(pop_int_from_stack(stack, &second));
+    int result = first > second ? 1 : 0;
+    HANDLE_OVERFLOW(push_int_to_stack(stack, result));
+    return true;
+}
+
 
 bool init_builtin_table(SD_Table *table) {
 
-    insert_item_sd_table(table, "DUP", (VoidFunc)builtin_dup);
-    insert_item_sd_table(table, "DROP", (VoidFunc)builtin_drop);
-    insert_item_sd_table(table, "SWAP", (VoidFunc)builtin_swap);
-    insert_item_sd_table(table, ".", (VoidFunc)builtin_dot);
-    insert_item_sd_table(table, "+", (VoidFunc)builtin_add);
-    insert_item_sd_table(table, "-", (VoidFunc)builtin_subtract);
-    insert_item_sd_table(table, "*", (VoidFunc)builtin_multiply);
-    insert_item_sd_table(table, "/", (VoidFunc)builtin_divide);
+    insert_item_sd_table(table, "DUP", (VoidFunc)b_dup);
+    insert_item_sd_table(table, "DROP", (VoidFunc)b_drop);
+    insert_item_sd_table(table, "SWAP", (VoidFunc)b_swap);
+
+    insert_item_sd_table(table, ".", (VoidFunc)b_dot);
+    insert_item_sd_table(table, "+", (VoidFunc)b_add);
+    insert_item_sd_table(table, "-", (VoidFunc)b_sub);
+    insert_item_sd_table(table, "*", (VoidFunc)b_mult);
+    insert_item_sd_table(table, "/", (VoidFunc)b_div);
+
+    insert_item_sd_table(table, "=", (VoidFunc)b_eq);
+    insert_item_sd_table(table, "<", (VoidFunc)b_lt);
+    insert_item_sd_table(table, ">", (VoidFunc)b_gt);
 
 }
