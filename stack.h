@@ -41,6 +41,7 @@ typedef struct
     int *items;
 } IntStack;
 
+// TODO: change names
 IntStack *new_int_stack(size_t capacity);
 IntStackResult push_int_to_stack(IntStack *stack, int item);
 IntStackResult pop_int_from_stack(IntStack *stack, int *return_item);

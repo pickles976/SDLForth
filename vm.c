@@ -36,9 +36,16 @@ void step(VM *vm, IntStack *data_stack, IntStack *call_stack, SD_Table *sd_table
             vm->ip = (size_t)ins.bytecode.address;
             break;
         case RETURN:
-            int return_int;
-            pop_int_from_stack(call_stack, &return_int);
-            vm->ip = (size_t)return_int;
+            int return_address;
+            pop_int_from_stack(call_stack, &return_address);
+            vm->ip = (size_t)return_address;
+            break;
+        case BRANCH:
+            int truth_value;
+            pop_int_from_stack(data_stack, &truth_value);
+            if (truth_value == 0) { // If false, skip to THEN
+                vm->ip = (size_t)ins.bytecode.address;
+            }
             break;
         default:
             break;
@@ -66,6 +73,9 @@ bool printVM(VM *vm) {
                 break;
             case RETURN:
                 printf("[RETURN]");
+                break;
+            case BRANCH:
+                printf("[BRANCH, %zd]", instruction.bytecode.address);
                 break;
             default:
                 printf("ERROR");

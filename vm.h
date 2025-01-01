@@ -14,7 +14,8 @@ typedef enum {
     VALUE,
     FUNC,
     JUMP,
-    RETURN
+    RETURN,
+    BRANCH
 } InstructionType;
 
 typedef union {

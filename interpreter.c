@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 
-bool is_digit(char c) { return c >= '0' && c <= '9'; }
+bool isDigit(char c) { return c >= '0' && c <= '9'; }
 
-bool is_number(char *word) {
+bool isNumber(char *word) {
 
   int word_len = strlen(word);
   for (int i = 0; i < word_len; i++) {
-    if (is_digit(word[i]) || (i == 0 && word[i] == '-')) {
+    if (isDigit(word[i]) || (i == 0 && word[i] == '-')) {
 
     } else {
       return false;
@@ -59,7 +59,7 @@ void split(char *line, StringArray *array) {
   }
 }
 
-void define_user_function(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_table) {
+void defineUserFunction(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_table) {
   /**
    * Example Input: [":", "2DUP", "DUP", "DUP", ";"]
    * 
@@ -101,6 +101,64 @@ void define_user_function(StringArray *array, VM *vm, SD_Table *sd_table, DD_Tab
   vm->ip = vm->length;
 }
 
+void defineIfStatement(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_table) {
+    /**
+   * Example Input: [":", "ZERO?", "=", "0", "IF", "1", ".", "THEN", "0", ".", ";"]
+   * 
+   * ip ---> |                               | <----------------------branch address
+   * VM: [*EQUALS][BRANCH][VALUE(1)][DOT][VALUE(0)][DOT][RETURN]
+   * 
+   * 
+   * BRANCH will jump to the address of the bytecode that executes after "THEN"
+   * Otherwise, the interpreter will just continue to run.
+   */
+
+  // Look for "THEN"
+  int i = 0;
+  int index = -1;
+  while (i < array->count) {
+    if (strcmp(array->tokens[i], "THEN") == 0) {
+      index = i;
+      break;
+    } 
+    i++;
+  }
+
+  // "THEN" not found
+  if (index == -1) {
+    printf("EXPECTED ': IF ___ THEN ___ ;");
+    printf("\n");
+    return;
+  }
+
+  // TODO: handle else
+
+  // add BRANCH instruction with no address (we don't know it yet)
+  U_ByteCode bytecode;
+  int branch_position = vm->length;
+  addInstruction(vm, BRANCH, bytecode);
+
+  // Assemble bytecode to be executed on IF
+  StringArray *if_array = new_string_array(index);
+  for (size_t i = 1; i < index; i++) { // Start at 1 to exclude IF
+    add_string_to_array(if_array, array->tokens[i]);
+  }
+  interpret(if_array, vm, sd_table, dd_table);
+
+  // Set BRANCH address to code executed by THEN
+  vm->code[branch_position].bytecode.address = vm->length;
+
+  // Assemble bytecode to be executed on THEN
+  size_t then_length = array->count - index;
+  StringArray *then_array = new_string_array(then_length);
+  for (size_t i = 1; i < then_length - 1; i++) { // start at 1 to skip "THEN"
+    add_string_to_array(then_array, array->tokens[i]);
+  }
+  interpret(then_array, vm, sd_table, dd_table);
+
+}
+
+
 void interpret(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_table) {
 
   // Loop over words
@@ -109,14 +167,16 @@ void interpret(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_tabl
 
     U_ByteCode bytecode;
 
-    if (is_number(word)) {
+    if (isNumber(word)) {
       // Add constant number to bytecode array
       int number = strtol(word, NULL, 10);
       bytecode.value = number;
       addInstruction(vm, VALUE, bytecode);
     } else if (strcmp(word, ":") == 0) {
-      // Define user functions
-      define_user_function(array, vm, sd_table, dd_table);
+      defineUserFunction(array, vm, sd_table, dd_table);
+      break;
+    } else if (strcmp(word, "IF") == 0) {
+      defineIfStatement(array, vm, sd_table, dd_table);
       break;
     } else {
 
