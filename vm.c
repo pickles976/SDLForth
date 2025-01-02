@@ -63,21 +63,21 @@ bool printVM(VM *vm) {
         Instruction instruction = vm->code[i];
         switch (instruction.type) {
             case VALUE:
-                printf("[%d, %d]", i, instruction.bytecode);
+                printf("[%d: %d]", i, instruction.bytecode);
                 break;
             case FUNC:
-                printf("[%d, ", i);
+                printf("[%d: ", i);
                 printCode(instruction.bytecode);
                 printf("]");
                 break;
             case JUMP:
-                printf("[%d, JMP, %d]", i, instruction.bytecode);
+                printf("[%d: JMP(%d)]", i, instruction.bytecode);
                 break;
             case RETURN:
-                printf("[%d, RET]", i);
+                printf("[%d: RET]", i);
                 break;
             case BRANCH:
-                printf("[%d, BRANCH, %d]", i, instruction.bytecode);
+                printf("[%d: BRANCH(%d)]", i, instruction.bytecode);
                 break;
             default:
                 printf("ERROR");

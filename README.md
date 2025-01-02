@@ -17,16 +17,13 @@ Reference Material:
 
 ```commandline
 Keys: SWAP, *, +, -, ., /, DROP, <, =, >, DUP, 
-> : ZERO? 0 = IF 13 . THEN ; 
+> : ZERO? 0 = IF 13 . THEN ;
 STACK: 
-VM: [0, 0][1, EQUALS][2, BRANCH, 5][3, 13][4, DOT][5, RET]
-> 0
-STACK: [0]
-VM: [0, 0][1, EQUALS][2, BRANCH, 5][3, 13][4, DOT][5, RET][6, 0]
-> ZERO?
+VM: [0: 0][1: EQUALS][2: BRANCH(5)][3: 13][4: DOT][5: RET]
+> 0 ZERO?
 13
 STACK: 
-VM: [0, 0][1, EQUALS][2, BRANCH, 5][3, 13][4, DOT][5, RET][6, 0][7, JMP, 0]
+VM: [0: 0][1: EQUALS][2: BRANCH(5)][3: 13][4: DOT][5: RET][6: 0][7: JMP(0)]
 ```
 
 ## TODO:
