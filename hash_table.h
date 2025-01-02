@@ -22,20 +22,25 @@
 #include "stack.h"
 #include "string_array.h"
 
+#define HASH 5381
+#define EMPTY_KEY SIZE_MAX
+
+
 typedef struct {
     size_t *keys;
     char **strings;
-    size_t *values;
+    int *values;
 
     size_t capacity; // capacity
     size_t length; // length
-} DD_Table;
+} HashTable;
 
-DD_Table* new_dd_table(size_t capacity);
-void free_dd_table(DD_Table *table);
-bool insert_item_dd_table(DD_Table *table, char *key, size_t value);
-bool get_item_dd_table(DD_Table *table, char *key, size_t *value);
-void print_dd_table_keys(DD_Table *table);
-void print_dd_table_values(DD_Table *table);
+size_t hash_string(char *key);
+HashTable* new_hash_table(size_t capacity);
+void free_hash_table(HashTable *table);
+bool insert_item_hash_table(HashTable *table, char *key, int value);
+bool get_item_hash_table(HashTable *table, char *key, int *value);
+void print_hash_table_keys(HashTable *table);
+void print_hash_table_values(HashTable *table);
 
 #endif

@@ -16,26 +16,20 @@ Reference Material:
 ## Example
 
 ```commandline
-Keys: SWAP, *, +, -, ., /, DROP, DUP,
-> : SQUARE DUP * ;
-STACK:
-VM: [FUNC][FUNC][RETURN]
-> : 4TH SQUARE SQUARE ;
-STACK:
-VM: [FUNC][FUNC][RETURN][JUMP, 0][JUMP, 0][RETURN]
-> 2
-STACK: [2]
-VM: [FUNC][FUNC][RETURN][JUMP, 0][JUMP, 0][RETURN][VALUE, 2]
-> 4TH
-STACK: [16]
-VM: [FUNC][FUNC][RETURN][JUMP, 0][JUMP, 0][RETURN][VALUE, 2][JUMP, 3]
+Keys: SWAP, *, +, -, ., /, DROP, <, =, >, DUP, 
+> : ZERO? 0 = IF 13 . THEN ; 
+STACK: 
+VM: [0, 0][1, EQUALS][2, BRANCH, 5][3, 13][4, DOT][5, RET]
+> 0
+STACK: [0]
+VM: [0, 0][1, EQUALS][2, BRANCH, 5][3, 13][4, DOT][5, RET][6, 0]
+> ZERO?
+13
+STACK: 
+VM: [0, 0][1, EQUALS][2, BRANCH, 5][3, 13][4, DOT][5, RET][6, 0][7, JMP, 0]
 ```
 
 ## TODO:
-- [x] implement conditionals
-- [x] handle when there is stuff before "IF"
-    - [x] implement StringArray copying
-    - [x] get: `: ZERO? 0 = IF 13 . ;" working
 - [ ] implement "ELSE"
 - [ ] add strings (disallow spaces for simplicity)
 
@@ -49,9 +43,6 @@ Add more builtins
 - [ ] /MOD
 
 #### Tests
-Can we consolidate dd table and sd table?
-- [ ] dd table
-- [ ] sd table
 - [ ] stack
 - [ ] vm
 - [ ] improve error handling

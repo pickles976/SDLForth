@@ -59,12 +59,12 @@ void split(char *line, StringArray *array) {
   }
 }
 
-void defineUserFunction(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_table) {
+void defineUserFunction(StringArray *array, VM *vm, HashTable *sd_table, HashTable *hash_table) {
   /**
    * Example Input: [":", "2DUP", "DUP", "DUP", ";"]
    * 
    * ----------> ip
-   * VM: [PREV][*DUP][*DUP][RETURN]
+   * VM: [PREV][DUP][DUP][RETURN]
    * 
    * DD_TABLE: { 2DUP : ip }
    * 
@@ -88,20 +88,19 @@ void defineUserFunction(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table
 
   // TODO: might need to modify this bit of code to allow of re-definition of functions
   // Insert current address into table
-  insert_item_dd_table(dd_table, array->tokens[1], vm->length);
+  insert_item_hash_table(hash_table, array->tokens[1], vm->length);
 
   // Add instructions into vm (requires recursion)
-  interpret(copy_array, vm, sd_table, dd_table);
+  interpret(copy_array, vm, sd_table, hash_table);
 
   // Add return instruction
-  U_ByteCode bytecode;
-  addInstruction(vm, RETURN, bytecode);
+  addInstruction(vm, RETURN, -1);
 
   // skip over function definition
   vm->ip = vm->length;
 }
 
-void defineIfStatement(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_table) {
+void defineIfStatement(StringArray *array, VM *vm, HashTable *sd_table, HashTable *hash_table) {
     /**
    * Example Input: [":", "ZERO?", "=", "0", "IF", "1", ".", "THEN", "0", ".", ";"]
    * 
@@ -134,63 +133,57 @@ void defineIfStatement(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table 
   // TODO: handle else
 
   // add BRANCH instruction with no address (we don't know it yet)
-  U_ByteCode bytecode;
   int branch_position = vm->length;
-  addInstruction(vm, BRANCH, bytecode);
+  addInstruction(vm, BRANCH, -1);
 
   // Assemble bytecode to be executed on IF
   StringArray *if_branch = get_subarray(array, 1, index); // Start at 1 to exclude IF
   // print_string_array(if_branch);
-  interpret(if_branch, vm, sd_table, dd_table);
+  interpret(if_branch, vm, sd_table, hash_table);
 
   // Set BRANCH address to code executed by THEN
-  vm->code[branch_position].bytecode.address = vm->length;
+  vm->code[branch_position].bytecode = vm->length;
 
   // Assemble bytecode to be executed on THEN
   StringArray *then_branch = get_subarray(array, index + 1, array->count);
   // print_string_array(then_branch);
-  interpret(then_branch, vm, sd_table, dd_table);
+  interpret(then_branch, vm, sd_table, hash_table);
 
 }
 
 
-void interpret(StringArray *array, VM *vm, SD_Table *sd_table, DD_Table *dd_table) {
+void interpret(StringArray *array, VM *vm, HashTable *sd_table, HashTable *hash_table) {
 
   // Loop over words
   for (int i = 0; i < array->count; i++) {
     char* word = array->tokens[i];
 
-    U_ByteCode bytecode;
-
     if (isNumber(word)) {
       // Add constant number to bytecode array
       int number = strtol(word, NULL, 10);
-      bytecode.value = number;
-      addInstruction(vm, VALUE, bytecode);
+      addInstruction(vm, VALUE, number);
     } else if (strcmp(word, ":") == 0) {
-      defineUserFunction(array, vm, sd_table, dd_table);
+      defineUserFunction(array, vm, sd_table, hash_table);
       break;
     } else if (strcmp(word, "IF") == 0) {
       StringArray *copy_array = get_subarray(array, i, array->count);
-      defineIfStatement(copy_array, vm, sd_table, dd_table);
+      defineIfStatement(copy_array, vm, sd_table, hash_table);
       break;
     } else {
 
       // Add function ptr to vm
-      VoidFunc builtin;
-      bool result = get_item_sd_table(sd_table, word, &builtin);
+      int builtin;
+      bool result = get_item_hash_table(sd_table, word, &builtin);
       if (result) {
-        bytecode.builtin = (VoidFunc)builtin;
-        addInstruction(vm, FUNC, bytecode);
+        addInstruction(vm, FUNC, (FunctionCode)builtin);
         continue;
       }
 
       // Add instruction ptr JUMP to 
-      size_t address;
-      result = get_item_dd_table(dd_table, word, &address);
+      int address;
+      result = get_item_hash_table(hash_table, word, &address);
       if (result) {
-        bytecode.address = address;
-        addInstruction(vm, JUMP, bytecode);
+        addInstruction(vm, JUMP, address);
         continue;
       }
       

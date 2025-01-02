@@ -102,20 +102,102 @@ bool b_gt(IntStack *stack) {
 }
 
 
-bool init_builtin_table(SD_Table *table) {
+bool init_builtin_table(HashTable *table) {
 
-    insert_item_sd_table(table, "DUP", (VoidFunc)b_dup);
-    insert_item_sd_table(table, "DROP", (VoidFunc)b_drop);
-    insert_item_sd_table(table, "SWAP", (VoidFunc)b_swap);
+    insert_item_hash_table(table, "DUP", DUP);
+    insert_item_hash_table(table, "DROP", DROP);
+    insert_item_hash_table(table, "SWAP", SWAP);
 
-    insert_item_sd_table(table, ".", (VoidFunc)b_dot);
-    insert_item_sd_table(table, "+", (VoidFunc)b_add);
-    insert_item_sd_table(table, "-", (VoidFunc)b_sub);
-    insert_item_sd_table(table, "*", (VoidFunc)b_mult);
-    insert_item_sd_table(table, "/", (VoidFunc)b_div);
+    insert_item_hash_table(table, ".", DOT);
 
-    insert_item_sd_table(table, "=", (VoidFunc)b_eq);
-    insert_item_sd_table(table, "<", (VoidFunc)b_lt);
-    insert_item_sd_table(table, ">", (VoidFunc)b_gt);
+    insert_item_hash_table(table, "+", ADD);
+    insert_item_hash_table(table, "-", SUBTRACT);
+    insert_item_hash_table(table, "*", MULTIPLY);
+    insert_item_hash_table(table, "/", DIVIDE);
 
+    insert_item_hash_table(table, "=", EQUALS);
+    insert_item_hash_table(table, "<", LESS_THAN);
+    insert_item_hash_table(table, ">", GREATER_THAN);
+
+}
+
+void dispatch(FunctionCode code, IntStack *stack) {
+
+    switch (code) {
+        case DUP:
+            b_dup(stack);
+            break;
+        case DROP:
+            b_drop(stack);
+            break;
+        case SWAP:
+            b_swap(stack);
+            break;
+        case DOT:
+            b_dot(stack);
+            break;
+        case ADD:
+            b_add(stack);
+            break;
+        case SUBTRACT:
+            b_sub(stack);
+            break;
+        case MULTIPLY:
+            b_mult(stack);
+            break;
+        case DIVIDE:
+            b_div(stack);
+            break;
+        case EQUALS:
+            b_eq(stack);
+            break;
+        case LESS_THAN:
+            b_lt(stack);
+            break;
+        case GREATER_THAN:
+            b_gt(stack);
+            break;
+        default:
+            break;
+    }
+}
+
+void printCode(FunctionCode code) {
+    switch (code) {
+        case DUP:
+            printf("DUP");
+            break;
+        case DROP:
+            printf("DROP");
+            break;
+        case SWAP:
+            printf("SWAP");
+            break;
+        case DOT:
+            printf("DOT");
+            break;
+        case ADD:
+            printf("ADD");
+            break;
+        case SUBTRACT:
+            printf("SUBTRACT");
+            break;
+        case MULTIPLY:
+            printf("MULTIPLY");
+            break;
+        case DIVIDE:
+            printf("DIVIDE");
+            break;
+        case EQUALS:
+            printf("EQUALS");
+            break;
+        case LESS_THAN:
+            printf("LESS_THAN");
+            break;
+        case GREATER_THAN:
+            printf("GREATER_THAN");
+            break;
+        default:
+            break;
+    }
 }

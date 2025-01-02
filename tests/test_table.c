@@ -1,6 +1,6 @@
 
 #include <stdio.h>
-#include "dd_table.h"
+#include "hash_table.h"
 #include "string_array.h"
 
 int main(int argc, const char *argv[]) {
@@ -14,29 +14,29 @@ int main(int argc, const char *argv[]) {
   add_string_to_array(b, "THREE");
   add_string_to_array(b, "FOUR");
 
-  DD_Table *table = new_dd_table(2);
-  insert_item_dd_table(table, "A", a);
-  insert_item_dd_table(table, "B", b);
-  insert_item_dd_table(table, "C", b);
-  insert_item_dd_table(table, "D", a);
-  insert_item_dd_table(table, "E", b);
-  print_dd_table_keys(table);
-  print_dd_table_values(table);
+  HashTable *table = new_hash_table(2);
+  insert_item_hash_table(table, "A", a);
+  insert_item_hash_table(table, "B", b);
+  insert_item_hash_table(table, "C", b);
+  insert_item_hash_table(table, "D", a);
+  insert_item_hash_table(table, "E", b);
+  print_hash_table_keys(table);
+  print_hash_table_values(table);
 
   StringArray *item;
-  get_item_dd_table(table, "A", &item);
+  get_item_hash_table(table, "A", &item);
   print_string_array(item);
 
-  get_item_dd_table(table, "B", &item);
+  get_item_hash_table(table, "B", &item);
   print_string_array(item);
 
-  get_item_dd_table(table, "C", &item);
+  get_item_hash_table(table, "C", &item);
   print_string_array(item);
 
-  get_item_dd_table(table, "D", &item);
+  get_item_hash_table(table, "D", &item);
   print_string_array(item);
 
-  get_item_dd_table(table, "E", &item);
+  get_item_hash_table(table, "E", &item);
   print_string_array(item);
 
   return 0;

@@ -12,11 +12,11 @@ static void repl() {
   VM *vm = newVM(1024);
   IntStack *data_stack = new_int_stack(256);
   IntStack *call_stack = new_int_stack(256);
-  SD_Table *sd_table = new_sd_table(64);
-  DD_Table *dd_table = new_dd_table(2);
+  HashTable *sd_table = new_hash_table(64);
+  HashTable *hash_table = new_hash_table(2);
 
   init_builtin_table(sd_table);
-  print_sd_table_keys(sd_table);
+  print_hash_table_keys(sd_table);
 
   char line[1024];
   for (;;) {
@@ -28,8 +28,8 @@ static void repl() {
     }
 
     split(line, array);
-    interpret(array, vm, sd_table, dd_table);
-    run(vm, data_stack, call_stack, sd_table, dd_table);
+    interpret(array, vm, sd_table, hash_table);
+    run(vm, data_stack, call_stack, sd_table, hash_table);
 
     printf("STACK: ");
     print_stack(data_stack);
@@ -42,8 +42,8 @@ static void repl() {
   free_stack(data_stack);
   free_stack(call_stack);
   free_string_array(array);
-  free_sd_table(sd_table);
-  free_dd_table(dd_table);
+  free_hash_table(sd_table);
+  free_hash_table(hash_table);
 
 }
 

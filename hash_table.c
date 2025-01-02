@@ -1,9 +1,20 @@
-#include "dd_table.h"
-#include "sd_table.h" // get hash function
+#include "hash_table.h"
 #include <stdio.h>
 
-DD_Table *new_dd_table(size_t capacity) {
-    DD_Table *table = malloc(sizeof(DD_Table));
+// WARNING: NOT EVALUATED. idk how rare collisions are with this hash function
+size_t hash_string(char *key)
+{
+    size_t hash = HASH;
+    int c;
+
+    while (c = *key++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+    return hash;
+}
+
+HashTable *new_hash_table(size_t capacity) {
+    HashTable *table = malloc(sizeof(HashTable));
     table->capacity = capacity;
     table->length = 0;
     table->keys = malloc(sizeof(size_t) * capacity);
@@ -17,7 +28,7 @@ DD_Table *new_dd_table(size_t capacity) {
     return table;
 }
 
-void free_dd_table(DD_Table *table) {
+void free_hash_table(HashTable *table) {
 
     for (int i = 0; i < table->capacity; i++) {
         if (table->keys[i] != EMPTY_KEY) {
@@ -31,7 +42,7 @@ void free_dd_table(DD_Table *table) {
     free(table);
 }
 
-bool insert_item_dd_table(DD_Table *table, char *key, size_t value) {
+bool insert_item_hash_table(HashTable *table, char *key, int value) {
 
 
     if (table->capacity == table->length) {
@@ -49,9 +60,9 @@ bool insert_item_dd_table(DD_Table *table, char *key, size_t value) {
         free(table->strings);
         free(table->values);
         free(table);
-        *table = *new_dd_table(oldCapacity * 2);
+        *table = *new_hash_table(oldCapacity * 2);
         for (size_t i = 0; i < oldCapacity; i++) {
-            insert_item_dd_table(table, strings[i], values[i]);
+            insert_item_hash_table(table, strings[i], values[i]);
         }
         // printf("Growing table!\n");
         // printf("Old Capacity: %d, New Capacity: %d\n", oldCapacity, oldCapacity * 2);
@@ -81,7 +92,7 @@ bool insert_item_dd_table(DD_Table *table, char *key, size_t value) {
 
 }
 
-bool get_item_dd_table(DD_Table *table, char *key, size_t *return_item) {
+bool get_item_hash_table(HashTable *table, char *key, int *return_item) {
     size_t hash = hash_string(key);
     size_t modulo_hash = hash % table->capacity;
 
@@ -107,7 +118,7 @@ bool get_item_dd_table(DD_Table *table, char *key, size_t *return_item) {
     return false;
 }
 
-void print_dd_table_keys(DD_Table *table) {
+void print_hash_table_keys(HashTable *table) {
     printf("Keys: ");
     for (size_t i = 0; i < table->capacity; i++) {
         if (table->keys[i] != EMPTY_KEY) {
@@ -117,11 +128,11 @@ void print_dd_table_keys(DD_Table *table) {
     printf("\n");
 }
 
-void print_dd_table_values(DD_Table *table) {
+void print_hash_table_values(HashTable *table) {
     printf("Values: ");
     for (size_t i = 0; i < table->capacity; i++) {
         if (table->keys[i] != EMPTY_KEY) {
-            printf("%ld, ", table->values[i]);
+            printf("%d, ", table->values[i]);
         }
     }
     printf("\n");
